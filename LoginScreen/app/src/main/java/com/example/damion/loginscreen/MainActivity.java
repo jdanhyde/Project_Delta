@@ -95,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 //String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
+                Intent launchGame = new Intent(String.valueOf(gameScreen.class));//create our intent
+                String userID = null; //fill in with how to get the userID
+                launchGame.putExtra(userID, userID);//places UserID in the intent
+                startActivity(launchGame);
             }
         });
 
