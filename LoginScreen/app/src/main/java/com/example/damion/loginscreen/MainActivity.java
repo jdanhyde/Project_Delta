@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         String username = preferences.getString("user", "");
         String password = preferences.getString("pass", "");
         if(isCheck == "true"){
-            String url = "http://10.230.35.249/Game/userLogin.php?username=" + username + "&password=" + password;
-            //String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + username + "&password=" + password;
+            //String url = "http://10.230.35.249/Game/userLogin.php?username=" + username + "&password=" + password;
+            String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + username + "&password=" + password;
             System.out.println("URL: " + url);
             new tryLogin().execute(url);
         }

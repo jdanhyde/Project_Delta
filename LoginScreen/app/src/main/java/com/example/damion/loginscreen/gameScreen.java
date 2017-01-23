@@ -40,6 +40,14 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     LatLng playerLoc = new LatLng(0,0);
 
     @Override
+    protected void onDestroy(Bundle savedInstanceState) {
+        super.onDestroy(savedInstanceState);
+        String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + user;
+        System.out.println("URL: " + url);
+        new MainActivity.tryLogin().execute(url);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Permission checks
