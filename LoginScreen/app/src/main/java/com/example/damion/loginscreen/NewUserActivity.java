@@ -57,8 +57,12 @@ public class NewUserActivity extends AppCompatActivity {
                 usernameLogin = etUser.getText().toString();
                 etPass = (EditText) findViewById(R.id.editText2);
                 passwordLogin = etPass.getText().toString();
+<<<<<<< HEAD
                 //String url = "http://10.230.35.249/Game/userAdd.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 String url = "http://www.redwoodmediaco.com/compsci/userAdd.php?username=" + usernameLogin + "&password=" + passwordLogin;
+=======
+                String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
+>>>>>>> origin/master
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
 
