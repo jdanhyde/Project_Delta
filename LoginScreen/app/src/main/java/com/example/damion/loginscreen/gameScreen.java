@@ -35,7 +35,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class gameScreen extends FragmentActivity implements OnConnectionFailedListener, OnMapReadyCallback {
-    public static final String TAG = "mainActivity";
+
+    public static final String TAG = "gameActivity";
     private GoogleApiClient mGoogleApiClient;
     LatLng playerLoc = new LatLng(0,0);
 
@@ -43,11 +44,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Permission checks
-        setContentView(R.layout.activity_main);
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        setContentView(R.layout.activity_game_screen);
 
         //set up location
         // Acquire a reference to the system Location Manager

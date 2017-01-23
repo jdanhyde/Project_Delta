@@ -1,11 +1,15 @@
 package com.example.damion.loginscreen;
 
+import android.*;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     public final static String EXTRA_USERNAME = "";
     public final static String EXTRA_PASSWORD = "";
+    public final static String LOGIN_ACTIVITY = "com.example.damion.loginscreen";
 
     private TextView tvMessageLogin;
     private EditText etUser;
@@ -51,11 +56,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         SharedPreferences prefs = this.getSharedPreferences(
                 "com.example.app", Context.MODE_PRIVATE);
 
@@ -64,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
         String username = preferences.getString("user", "");
         String password = preferences.getString("pass", "");
         if(isCheck == "true"){
-            String url = "http://10.230.36.26/Game/userLogin.php?username=" + username + "&password=" + password;
-            //String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + username + "&password=" + password;
+            String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + username + "&password=" + password;
             System.out.println("URL: " + url);
             new tryLogin().execute(url);
         }
@@ -91,11 +99,9 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("pass", passwordLogin);
                     editor.apply();
                 }
-                String url = "http://10.230.35.236/Game/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
-                //String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
+                String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
-
             }
         });
 
@@ -175,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
                     tvMessageLogin.setText(parentObject.getString("message"));
                 }
                 else if (parentObject.getString("status").equals("true")){
-                    Intent launchGame = new Intent(MainActivity.this, gameScreen.class);//create our intent
-                    String userID = null; //fill in with how to get the userID
-                    launchGame.putExtra(userID, userID);//places UserID in the intent
-                    startActivity(launchGame);
+                    //get userID
+                    int userID = 0;//get userID
+                    launchGame(userID);
+                    //BEGIN GAME
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -223,5 +229,10 @@ public class MainActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+    public void launchGame(int userID){
+        Intent launchGame = new Intent(this, gameScreen.class);//create our intent
+        launchGame.putExtra("userID", userID);//places UserID in the intent
+        startActivity(launchGame);
     }
 }
