@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         String username = preferences.getString("user", "");
         String password = preferences.getString("pass", "");
         if(isCheck == "true"){
-            String url = "http://10.230.36.26/Game/userLogin.php?username=" + username + "&password=" + password;
+            String url = "http://10.230.35.249/Game/userLogin.php?username=" + username + "&password=" + password;
             //String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + username + "&password=" + password;
             System.out.println("URL: " + url);
             new tryLogin().execute(url);
@@ -91,14 +91,10 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("pass", passwordLogin);
                     editor.apply();
                 }
-                String url = "http://10.230.35.236/Game/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
-                //String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
+                //String url = "http://localhost/Game/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
+                String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
-                Intent launchGame = new Intent(String.valueOf(gameScreen.class));//create our intent
-                String userID = null; //fill in with how to get the userID
-                launchGame.putExtra(userID, userID);//places UserID in the intent
-                startActivity(launchGame);
             }
         });
 
@@ -178,6 +174,10 @@ public class MainActivity extends AppCompatActivity {
                     tvMessageLogin.setText(parentObject.getString("message"));
                 }
                 else if (parentObject.getString("status").equals("true")){
+                    Intent launchGame = new Intent(MainActivity.this, gameScreen.class);//create our intent
+                    String userID = null; //fill in with how to get the userID
+                    launchGame.putExtra(userID, userID);//places UserID in the intent
+                    startActivity(launchGame);
                     //BEGIN GAME
                 }
             } catch (JSONException e) {
