@@ -3,6 +3,7 @@ package com.example.damion.loginscreen;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -30,7 +32,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
@@ -47,7 +52,9 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
 
     public static final String TAG = "gameActivity";
     private GoogleApiClient mGoogleApiClient;
-    LatLng playerLoc = new LatLng(0,0);
+    LatLng playerLoc = new LatLng(0, 0);
+    private GoogleMap map = null;
+
 
     /*@Override
     protected void onStop(Bundle savedInstanceState) {
@@ -62,7 +69,14 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         super.onCreate(savedInstanceState);
         //Permission checks
         setContentView(R.layout.activity_game_screen);
-
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+        if(mapFragment == null){
+            Log.e(TAG, "Error creating map");
+        }
+        mapFragment.getMapAsync(this);
+        String username = getIntent().getStringExtra("userID");
         //set up location
         // Acquire a reference to the system Location Manager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -71,22 +85,35 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 playerLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.i(TAG, String.valueOf(playerLoc.latitude)+ " , " + String.valueOf(playerLoc.longitude));
-                CameraUpdateFactory.newLatLng(playerLoc);
+                Log.i(TAG, String.valueOf(playerLoc.latitude) + " , " + String.valueOf(playerLoc.longitude));
+                map.moveCamera(CameraUpdateFactory.newLatLng(playerLoc));
+                map.addMarker(new MarkerOptions()
+                        .position(playerLoc)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                );
             }
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
 
-            public void onProviderEnabled(String provider) {}
+            public void onProviderEnabled(String provider) {
+            }
 
-            public void onProviderDisabled(String provider) {}
+            public void onProviderDisabled(String provider) {
+            }
         };
         // Register the listener with the Location Manager to receive location updates
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
-        //set up map
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mGoogleApiClient = new GoogleApiClient
@@ -95,6 +122,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .addApi(AppIndex.API).build();
+
     }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -149,10 +177,20 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             Log.e(TAG, String.format("permissions issue"));
             return;
         }
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
+            if(!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+        googleMap.setBuildingsEnabled(false);
         //set camera view
-        CameraUpdateFactory.newLatLng(playerLoc);
-        //googleMap.setMinZoomPreference(12.0f);
-        //googleMap.setMaxZoomPreference(24.0f);
+        googleMap.setMinZoomPreference(16.0f);
+        googleMap.setMaxZoomPreference(18.0f);
 
         //get nearby locations
         PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
@@ -163,10 +201,6 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     if(!placeLikelihood.getPlace().getPlaceTypes().contains(1021)){
-                    Log.i(TAG, String.format("Place '%s' has likelihood: %g and type" ,
-                            placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood(),
-                            placeLikelihood.getPlace().getPlaceTypes().toString()));
                                 googleMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(placeLikelihood.getPlace().getLatLng().latitude, placeLikelihood.getPlace().getLatLng().longitude))
                                         .title(placeLikelihood.getPlace().getName().toString() + " " + placeLikelihood.getPlace().getPlaceTypes().toString()));
@@ -178,6 +212,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                 }
             }
         });
+        map = googleMap;
 
     }
 

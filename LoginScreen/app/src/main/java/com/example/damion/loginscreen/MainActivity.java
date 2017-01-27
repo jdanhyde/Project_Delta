@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -168,12 +169,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            System.out.println("Reuslt: " + result);
+            System.out.println("Result: " + result);
 
-            String finalJson = result.toString();
             JSONObject parentObject = null;
             try {
-                parentObject = new JSONObject(finalJson);
+                parentObject = new JSONObject(result);
                 System.out.println(parentObject.getString("status"));
                 System.out.println(parentObject.getString("message"));
 
@@ -182,12 +182,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (parentObject.getString("status").equals("true")){
                     //get userID
-                    int userID = 0;//get userID
-                    launchGame(userID);
+                    //String username = usernameLogin;//get userID
+                    launchGame("");
                     //BEGIN GAME
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                e.getCause();
             }
 
 
@@ -230,9 +231,9 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
-    public void launchGame(int userID){
+    public void launchGame(String username){
         Intent launchGame = new Intent(this, gameScreen.class);//create our intent
-        launchGame.putExtra("userID", userID);//places UserID in the intent
+        launchGame.putExtra("userID", username);//places UserID in the intent
         startActivity(launchGame);
     }
 }
