@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +33,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class gameScreen extends FragmentActivity implements OnConnectionFailedListener, OnMapReadyCallback {
@@ -40,13 +49,13 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     private GoogleApiClient mGoogleApiClient;
     LatLng playerLoc = new LatLng(0,0);
 
-    @Override
-    protected void onDestroy(Bundle savedInstanceState) {
+    /*@Override
+    protected void onStop(Bundle savedInstanceState) {
         super.onDestroy(savedInstanceState);
-        String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + user;
+        String url = "http://www.redwoodmediaco.com/compsci/userLogout.php?username=" + user;
         System.out.println("URL: " + url);
-        new MainActivity.tryLogin().execute(url);
-    }
+        new tryLogin().execute(url);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,4 +180,50 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         });
 
     }
+
+    public class tryLogin extends AsyncTask<String, String, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            System.out.println(params[0]);
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+                return buffer.toString();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
 }
