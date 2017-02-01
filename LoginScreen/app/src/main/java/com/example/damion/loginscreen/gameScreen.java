@@ -72,7 +72,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
-        if(mapFragment == null){
+        if (mapFragment == null) {
             Log.e(TAG, "Error creating map");
         }
         mapFragment.getMapAsync(this);
@@ -124,6 +124,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                 .addApi(AppIndex.API).build();
 
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -145,12 +146,14 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -181,7 +184,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
-            if(!success) {
+            if (!success) {
                 Log.e(TAG, "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
@@ -200,14 +203,14 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    if(!placeLikelihood.getPlace().getPlaceTypes().contains(1021)){
-                                googleMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(placeLikelihood.getPlace().getLatLng().latitude, placeLikelihood.getPlace().getLatLng().longitude))
-                                        .title(placeLikelihood.getPlace().getName().toString() + " " + placeLikelihood.getPlace().getPlaceTypes().toString()));
+                    if (!placeLikelihood.getPlace().getPlaceTypes().contains(1021)) {
+                        googleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(placeLikelihood.getPlace().getLatLng().latitude, placeLikelihood.getPlace().getLatLng().longitude))
+                                .title(placeLikelihood.getPlace().getName().toString() + " " + placeLikelihood.getPlace().getPlaceTypes().toString()));
                     }
                 }
 
-                if (likelyPlaces.getCount()<0){
+                if (likelyPlaces.getCount() < 0) {
                     Log.e(TAG, String.format("No Places detected"));
                 }
             }
@@ -261,4 +264,6 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
 
             return null;
         }
+    }
+
 }
