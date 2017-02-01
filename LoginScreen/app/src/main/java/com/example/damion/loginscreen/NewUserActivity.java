@@ -1,5 +1,6 @@
 package com.example.damion.loginscreen;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +60,6 @@ public class NewUserActivity extends AppCompatActivity {
                 passwordLogin = etPass.getText().toString();
                 //String url = "http://10.230.35.249/Game/userAdd.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 String url = "http://www.redwoodmediaco.com/compsci/userAdd.php?username=" + usernameLogin + "&password=" + passwordLogin;
-                url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
 
@@ -152,7 +152,7 @@ public class NewUserActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            System.out.println("Reuslt: " + result);
+            System.out.println("Result: " + result);
 
             String finalJson = result.toString();
             JSONObject parentObject = null;
@@ -164,6 +164,8 @@ public class NewUserActivity extends AppCompatActivity {
                 if (parentObject.getString("status").equals("false")) {
                     tvMessageLogin.setText(parentObject.getString("message"));
                 } else if (parentObject.getString("status").equals("true")) {
+
+                    launchGame(usernameLogin);
                     //BEGIN GAME
                 }
             } catch (JSONException e) {
@@ -172,6 +174,11 @@ public class NewUserActivity extends AppCompatActivity {
 
 
         }
+    }
+    public void launchGame(String username){
+        Intent launchGame = new Intent(this, gameScreen.class);//create our intent
+        launchGame.putExtra("userID", username);//places UserID in the intent
+        startActivity(launchGame);
     }
 
 }

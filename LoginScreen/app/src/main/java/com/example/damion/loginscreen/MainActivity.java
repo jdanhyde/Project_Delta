@@ -182,8 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (parentObject.getString("status").equals("true")){
                     //get userID
-                    //String username = usernameLogin;//get userID
-                    launchGame("");
+                    launchGame(usernameLogin);
                     //BEGIN GAME
                 }
             } catch (JSONException e) {

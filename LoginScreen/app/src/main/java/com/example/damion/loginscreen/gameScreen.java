@@ -35,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -87,9 +88,11 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                 playerLoc = new LatLng(location.getLatitude(), location.getLongitude());
                 Log.i(TAG, String.valueOf(playerLoc.latitude) + " , " + String.valueOf(playerLoc.longitude));
                 map.moveCamera(CameraUpdateFactory.newLatLng(playerLoc));
+                map.setLatLngBoundsForCameraTarget(new LatLngBounds(playerLoc,playerLoc));
                 map.addMarker(new MarkerOptions()
                         .position(playerLoc)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+
                 );
             }
 
