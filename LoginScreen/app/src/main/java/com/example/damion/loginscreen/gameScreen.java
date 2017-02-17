@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -88,13 +89,11 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 playerLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.i(TAG, String.valueOf(playerLoc.latitude) + " , " + String.valueOf(playerLoc.longitude));
                 map.moveCamera(CameraUpdateFactory.newLatLng(playerLoc));
                 map.setLatLngBoundsForCameraTarget(new LatLngBounds(playerLoc,playerLoc));
                 map.addMarker(new MarkerOptions()
-                        .position(playerLoc)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-
+                        .position(playerLoc)
                 );
             }
 
@@ -105,6 +104,8 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             }
 
             public void onProviderDisabled(String provider) {
+                Toast noLoc = Toast.makeText(getApplicationContext(),"Please Turn On Location Services",Toast.LENGTH_LONG);
+                noLoc.show();
             }
         };
         // Register the listener with the Location Manager to receive location updates
@@ -118,7 +119,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER,250,0,locationListener);
         // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mGoogleApiClient = new GoogleApiClient
@@ -214,6 +215,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                         googleMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(placeLikelihood.getPlace().getLatLng().latitude, placeLikelihood.getPlace().getLatLng().longitude))
                                 .title(placeLikelihood.getPlace().getName().toString() + " " + placeLikelihood.getPlace().getPlaceTypes().toString()));
+
                     }
                 }
 
