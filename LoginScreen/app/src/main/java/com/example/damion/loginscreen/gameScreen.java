@@ -56,7 +56,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     private GoogleApiClient mGoogleApiClient;
     LatLng playerLoc = new LatLng(0, 0);
     private GoogleMap map = null;
-
+    public String username = "";
 
     /*@Override
     protected void onStop(Bundle savedInstanceState) {
@@ -66,11 +66,13 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         new tryLogin().execute(url);
     }*/
 
-    String username = getIntent().getStringExtra("userID");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        username = getIntent().getStringExtra("userID");
+        Log.i(TAG,username);
         //Permission checks
         setContentView(R.layout.activity_game_screen);
         SupportMapFragment mapFragment =
@@ -170,8 +172,8 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         String url = "http://www.redwoodmediaco.com/compsci/userLogout.php?username=" + username;
         System.out.println("URL: " + url);
         new tryLogin().execute(url);
