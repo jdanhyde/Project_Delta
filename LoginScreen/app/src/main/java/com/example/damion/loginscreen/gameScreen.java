@@ -65,6 +65,8 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         new tryLogin().execute(url);
     }*/
 
+    String username = getIntent().getStringExtra("userID");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +79,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             Log.e(TAG, "Error creating map");
         }
         mapFragment.getMapAsync(this);
-        String username = getIntent().getStringExtra("userID");
+
         //set up location
         // Acquire a reference to the system Location Manager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -169,7 +171,9 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     @Override
     public void onStop() {
         super.onStop();
-
+        String url = "http://www.redwoodmediaco.com/compsci/userLogout.php?username=" + username;
+        System.out.println("URL: " + url);
+        new tryLogin().execute(url);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
