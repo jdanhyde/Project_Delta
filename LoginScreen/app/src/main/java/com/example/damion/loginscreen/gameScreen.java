@@ -40,6 +40,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,12 +70,11 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     }*/
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         username = getIntent().getStringExtra("userID");
-        Log.i(TAG,username);
+        Log.i(TAG, username);
         //Permission checks
         setContentView(R.layout.activity_game_screen);
         SupportMapFragment mapFragment =
@@ -92,7 +94,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                 // Called when a new location is found by the network location provider.
                 playerLoc = new LatLng(location.getLatitude(), location.getLongitude());
                 map.moveCamera(CameraUpdateFactory.newLatLng(playerLoc));
-                map.setLatLngBoundsForCameraTarget(new LatLngBounds(playerLoc,playerLoc));
+                map.setLatLngBoundsForCameraTarget(new LatLngBounds(playerLoc, playerLoc));
                 map.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                         .position(playerLoc)
@@ -106,7 +108,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             }
 
             public void onProviderDisabled(String provider) {
-                Toast noLoc = Toast.makeText(getApplicationContext(),"Please Turn On Location Services",Toast.LENGTH_LONG);
+                Toast noLoc = Toast.makeText(getApplicationContext(), "Please Turn On Location Services", Toast.LENGTH_LONG);
                 noLoc.show();
             }
         };
@@ -121,7 +123,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER,250,0,locationListener);
+        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 250, 0, locationListener);
         // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mGoogleApiClient = new GoogleApiClient
@@ -228,6 +230,32 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
 
     }
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction0() {
+        Thing object = new Thing.Builder()
+                .setName("gameScreen Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction0());
+        mGoogleApiClient.disconnect();
+    }
+
     public class tryLogin extends AsyncTask<String, String, String> {
 
 
@@ -273,6 +301,31 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            System.out.println("Result: " + result);
+
+            JSONObject parentObject = null;
+            try {
+                parentObject = new JSONObject(result);
+                System.out.println(parentObject.getString("status"));
+                System.out.println(parentObject.getString("message"));
+
+                if (parentObject.getString("status").equals("false")) {
+                    //PUT YOUR TEXTBOX HERE ->.setText(parentObject.getString("message"));
+                } else if (parentObject.getString("status").equals("true")) {
+                    //get userID
+                    //BEGIN GAME
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                e.getCause();
+            }
+
+        }
+
     }
 
 }
