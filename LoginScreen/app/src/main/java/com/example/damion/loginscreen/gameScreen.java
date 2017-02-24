@@ -177,8 +177,6 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         String url = "http://www.redwoodmediaco.com/compsci/userLogout.php?username=" + username;
         System.out.println("URL: " + url);
         new tryLogin().execute(url);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
         mGoogleApiClient.disconnect();
     }
