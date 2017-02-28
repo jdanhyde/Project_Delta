@@ -60,6 +60,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     LatLng playerLoc = new LatLng(0, 0);
     private GoogleMap map = null;
     public String username = "";
+    public String password = "";
 
     /*@Override
     protected void onStop(Bundle savedInstanceState) {
@@ -75,6 +76,8 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
         super.onCreate(savedInstanceState);
         username = getIntent().getStringExtra("userID");
         Log.i(TAG, username);
+        password = getIntent().getStringExtra("userPass");
+        Log.i(TAG, password);
         //Permission checks
         setContentView(R.layout.activity_game_screen);
         SupportMapFragment mapFragment =
@@ -160,8 +163,9 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     @Override
     public void onResume() {
         super.onResume();
-
-
+        String url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + username + "&password=" + password;
+        System.out.println("URL: " + url);
+        new tryLogin().execute(url);
     }
 
     @Override
@@ -176,9 +180,6 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        String url = "http://www.redwoodmediaco.com/compsci/userLogout.php?username=" + username;
-        System.out.println("URL: " + url);
-        new tryLogin().execute(url);
         AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
         mGoogleApiClient.disconnect();
     }
@@ -249,9 +250,9 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        String url = "http://www.redwoodmediaco.com/compsci/userLogout.php?username=" + username;
+        System.out.println("URL: " + url);
+        new tryLogin().execute(url);
         AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction0());
         mGoogleApiClient.disconnect();
     }

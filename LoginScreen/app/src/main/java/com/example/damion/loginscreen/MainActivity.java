@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (parentObject.getString("status").equals("true")){
                     //get userID
-                    launchGame(usernameLogin);
+                    launchGame(usernameLogin, passwordLogin);
                     //BEGIN GAME
                 }
             } catch (JSONException e) {
@@ -230,9 +230,10 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
-    public void launchGame(String username){
+    public void launchGame(String username, String password){
         Intent launchGame = new Intent(this, gameScreen.class);//create our intent
         launchGame.putExtra("userID", username);//places UserID in the intent
+        launchGame.putExtra("userPass", password);
         startActivity(launchGame);
     }
 }
