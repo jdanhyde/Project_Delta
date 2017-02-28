@@ -102,6 +102,9 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                         .position(playerLoc)
                 );
+                String url = "http://www.redwoodmediaco.com/compsci/userSetPos.php?username=" + username + "&lat=" + location.getLatitude() + "&long=" + location.getLongitude();
+                System.out.println("URL: " + url);
+                new tryLogin().execute(url);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
