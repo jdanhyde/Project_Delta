@@ -116,7 +116,7 @@ public class gameScreen extends FragmentActivity implements OnConnectionFailedLi
             public void onProviderDisabled(String provider) {
                 Toast noLoc = Toast.makeText(getApplicationContext(), "Please Turn On Location Services", Toast.LENGTH_LONG);
                 noLoc.show();
-            }
+         }
         };
         // Register the listener with the Location Manager to receive location updates
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

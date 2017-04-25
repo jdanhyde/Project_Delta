@@ -62,6 +62,8 @@ public class NewUserActivity extends AppCompatActivity {
                 String url = "http://www.redwoodmediaco.com/compsci/userAdd.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
+                url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
+                new tryLogin().execute(url);
 
             }
 
