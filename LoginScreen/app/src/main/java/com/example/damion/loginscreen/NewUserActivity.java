@@ -62,8 +62,7 @@ public class NewUserActivity extends AppCompatActivity {
                 String url = "http://www.redwoodmediaco.com/compsci/userAdd.php?username=" + usernameLogin + "&password=" + passwordLogin;
                 System.out.println("URL: " + url);
                 new tryLogin().execute(url);
-                url = "http://www.redwoodmediaco.com/compsci/userLogin.php?username=" + usernameLogin + "&password=" + passwordLogin;
-                new tryLogin().execute(url);
+                launchGame(usernameLogin, passwordLogin);
 
             }
 
@@ -167,7 +166,7 @@ public class NewUserActivity extends AppCompatActivity {
                     tvMessageLogin.setText(parentObject.getString("message"));
                 } else if (parentObject.getString("status").equals("true")) {
 
-                    launchGame(usernameLogin);
+                    launchGame(usernameLogin, passwordLogin);
                     //BEGIN GAME
                 }
             } catch (JSONException e) {
@@ -177,9 +176,10 @@ public class NewUserActivity extends AppCompatActivity {
 
         }
     }
-    public void launchGame(String username){
+    public void launchGame(String username, String password){
         Intent launchGame = new Intent(this, gameScreen.class);//create our intent
         launchGame.putExtra("userID", username);//places UserID in the intent
+        launchGame.putExtra("userPass", password);
         startActivity(launchGame);
     }
 
